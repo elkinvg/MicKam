@@ -16,7 +16,6 @@ public:
     explicit MicKamMainWindow(QWidget *parent = 0);
     ~MicKamMainWindow();
 
-    int MKVWidth; // width of view image widget
     bool resset;  // if camera is active return true
 
     QGraphicsScene *scene;
@@ -26,8 +25,9 @@ public:
     // qt window function
     void fileOpenImage(QString namefile);
     void viewOpenPixmap(const QPixmap &pixmap);
-    void viewOpenQimage(const QImage &image);
-    
+    void viewOpenQimage(const QImage &image);    
+    void ViewAppendText(QString message);
+
 private slots:
     void on_actionSave_Picture_as_triggered();
 
