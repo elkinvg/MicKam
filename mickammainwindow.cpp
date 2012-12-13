@@ -17,16 +17,28 @@ MicKamMainWindow::MicKamMainWindow(QWidget *parent) :
         QPixmap prew;
         if(prew.load("nichtpic.cap"))
         {
-            viewOpenPixmap(prew);
+            viewHelloImage(prew);
+        }
+        else
+        {
+            viewHelloText("OOPS!");
         }
     }
-
 }
 
 MicKamMainWindow::~MicKamMainWindow()
 {
     delete scene;
     delete ui;
+}
+
+void MicKamMainWindow::resizeEvent(QResizeEvent *event)
+{
+}
+
+bool MicKamMainWindow::eventFilter(QObject *obj, QEvent *event)
+{
+    QObject::eventFilter(obj, event);
 }
 
 void MicKamMainWindow::on_actionSave_Picture_as_triggered()
@@ -44,6 +56,21 @@ void MicKamMainWindow::on_actionOpen_image_file_triggered()
     fileOpenImage(ImageFileName);
 }
 
+void MicKamMainWindow::viewHelloImage(const QPixmap &pixmap)
+{
+    scene->clear();
+    scene->addPixmap(pixmap);
+    scene->setSceneRect(0,0,pixmap.width(),pixmap.height());
+    ui->MicKamView->setScene(scene);
+}
+
+void MicKamMainWindow::viewHelloText(QString text)
+{
+    scene->clear();
+    scene->addText(text,QFont("times",50));
+    ui->MicKamView->setScene(scene);
+}
+
 void MicKamMainWindow::fileOpenImage(QString namefile)
 {
 //    QImage qimage(namefile);
@@ -58,12 +85,19 @@ void MicKamMainWindow::viewOpenPixmap(const QPixmap &pixmap)
     scene->clear();
     scene->addPixmap(pixmap);
     scene->setSceneRect(0,0,pixmap.width(),pixmap.height());
-    if (pixmap.width()>ui->MicKamView->minimumWidth())
+    if (ui->MicKamView->matrix().m11()!=1. || ui->MicKamView->matrix().m22()!=1.)
     {
-        ui->MicKamView->scale(((double)ui->MicKamView->width()/(double)pixmap.width()),((double)ui->MicKamView->width()/(double)pixmap.width()));
+        ui->MicKamView->scale((1./ui->MicKamView->matrix().m11()),(1./ui->MicKamView->matrix().m11()));
     }
+//    ui->MicKamView->scale(((double)MKViewWidth/(double)pixmap.width()),((double)MKViewWidth/(double)pixmap.width()));
+    QString message("pixmap.width()="+QString::number(pixmap.width())+"... ui->MicKamView->width()"+" base "+QString::number(ui->MicKamView->window()->width())+"...."+QString::number(ui->widget_view->width()));
+
+    ViewAppendText(message);
+//    if (pixmap.width()>ui->MicKamView->minimumWidth())
+//    {
+//        ui->MicKamView->scale(((double)ui->MicKamView->width()/(double)pixmap.width()),((double)ui->MicKamView->width()/(double)pixmap.width()));
+//    }
     ui->MicKamView->setScene(scene);
-    ViewAppendText("MiyAu");
 }
 
 void MicKamMainWindow::viewOpenQimage(const QImage &image)
@@ -81,6 +115,7 @@ bool MicKamMainWindow::SetCamera()
 
 void MicKamMainWindow::ViewAppendText(QString message)
 {
-    QString Stime = QTime::currentTime().toString().toUtf8();
-    ui->MicKamMessage->appendPlainText(Stime+"\t "+message);
+    QDateTime DiT = QDateTime::currentDateTime();
+    QString SDiT = DiT.toString("yyyy.MM.dd hh:mm:ss");
+    ui->MicKamMessage->appendPlainText(SDiT+"\n"+message+"\n");
 }
