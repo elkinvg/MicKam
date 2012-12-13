@@ -8,7 +8,6 @@ MicKamMainWindow::MicKamMainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     scene = new QGraphicsScene;
-    MKVWidth = ui->MicKamView->width();
 
     resset = SetCamera();
 
@@ -57,7 +56,6 @@ void MicKamMainWindow::viewOpenPixmap(const QPixmap &pixmap)
     scene->clear();
     scene->addPixmap(pixmap);
     scene->setSceneRect(0,0,pixmap.width(),pixmap.height());
-    ui->MicKamView->scale(((double)MKVWidth/(double)pixmap.width()),((double)MKVWidth/(double)pixmap.width()));
     ui->MicKamView->setScene(scene);
 }
 
