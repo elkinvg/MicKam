@@ -17,6 +17,7 @@ public:
     ~MicKamMainWindow();
 
     bool resset;  // if camera is active return true
+    double scalenow; // value for scale of graphicsviews
 
     QGraphicsScene *scene;
     // camera function
@@ -25,8 +26,11 @@ public:
     // qt window function
     void fileOpenImage(QString namefile);
     void viewOpenPixmap(const QPixmap &pixmap);
-    void viewOpenQimage(const QImage &image);    
-    void ViewAppendText(QString message);
+    void viewOpenQimage(const QImage &image);
+
+    //virtual
+    virtual void resizeEvent(QResizeEvent *);
+    virtual bool eventFilter(QObject *, QEvent *);
 
 private slots:
     void on_actionSave_Picture_as_triggered();
@@ -35,6 +39,9 @@ private slots:
 
 private:
     Ui::MicKamMainWindow *ui;
+    void ViewAppendText(QString message);
+    void viewHelloImage(const QPixmap &pixmap);
+    void viewHelloText(QString);
 };
 
 #endif // MICKAMMAINWINDOW_H
