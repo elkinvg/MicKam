@@ -1,0 +1,13 @@
+*.o
+*~
+obj/
+git/
+*.user
+bin/
+Make*
+*.d
+*-back*
+hlp/
+SO/
+moc/
+ui
