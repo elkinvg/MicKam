@@ -29,8 +29,11 @@ LIBS += -L/usr/local/lib -lopencv_core -lopencv_imgproc -lopencv_highgui -lopenc
 }
 
 SOURCES += main.cpp\
-        mickammainwindow.cpp
+        mickammainwindow.cpp \
+    setsettingsforcamera.cpp
 
-HEADERS  += mickammainwindow.h
+HEADERS  += mickammainwindow.h \
+    setsettingsforcamera.h
 
-FORMS    += ./ui/mickammainwindow.ui
+FORMS    += ./ui/mickammainwindow.ui \
+    ui/setsettingsforcamera.ui

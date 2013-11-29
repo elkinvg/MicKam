@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QGraphicsScene>
+#include <setsettingsforcamera.h>
 
 namespace Ui {
 class MicKamMainWindow;
@@ -20,13 +21,15 @@ public:
     double scalenow; // value for scale of graphicsviews
 
     QGraphicsScene *scene;
+    SetSettingsForCamera *CameraSettings;
     // camera function
     bool SetCamera();
 
     // qt window function
     void fileOpenImage(QString namefile);
     void viewOpenPixmap(const QPixmap &pixmap);
-    void viewOpenQimage(const QImage &image);
+    void viewOpenQimage(const QImage &image);    
+
 
     //virtual
     virtual void resizeEvent(QResizeEvent *);
@@ -36,6 +39,8 @@ private slots:
     void on_actionSave_Picture_as_triggered();
 
     void on_actionOpen_image_file_triggered();
+
+    void on_actionSettings_triggered();
 
 private:
     Ui::MicKamMainWindow *ui;

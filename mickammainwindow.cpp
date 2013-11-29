@@ -4,7 +4,6 @@
 #include <QTime>
 #include <QScrollBar>
 
-
 MicKamMainWindow::MicKamMainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MicKamMainWindow)
@@ -161,4 +160,10 @@ void MicKamMainWindow::ViewAppendText(QString message)
     QDateTime DiT = QDateTime::currentDateTime();
     QString SDiT = DiT.toString("yyyy.MM.dd hh:mm:ss");
     ui->MicKamMessage->appendPlainText(SDiT+"\n"+message+"\n");
+}
+
+void MicKamMainWindow::on_actionSettings_triggered()
+{
+    CameraSettings = new SetSettingsForCamera;
+    CameraSettings->show();
 }
