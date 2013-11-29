@@ -10,4 +10,4 @@ Make*
 hlp/
 SO/
 moc/
-ui
+ui/*.h

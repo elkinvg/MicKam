@@ -88,6 +88,22 @@
         </widget>
        </item>
        <item>
+        <widget class="QFrame" name="frame_for_tab">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>200</height>
+          </size>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -139,7 +155,7 @@
      <x>0</x>
      <y>0</y>
      <width>1080</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuOpen_image_file">
@@ -153,7 +169,9 @@
     <property name="title">
      <string>Camera</string>
     </property>
+    <addaction name="actionActivate"/>
     <addaction name="actionPreview_Mode"/>
+    <addaction name="actionSettings"/>
    </widget>
    <addaction name="menuOpen_image_file"/>
    <addaction name="menuCamera"/>
@@ -178,6 +196,16 @@
    </property>
    <property name="text">
     <string>Preview Mode</string>
+   </property>
+  </action>
+  <action name="actionActivate">
+   <property name="text">
+    <string>Activate</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="text">
+    <string>Settings...</string>
    </property>
   </action>
  </widget>
