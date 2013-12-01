@@ -1,9 +1,13 @@
 #ifndef MICKAMMAINWINDOW_H
 #define MICKAMMAINWINDOW_H
-
+//QT
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include <setsettingsforcamera.h>
+// OPENCV
+#include <opencv/cv.h>
+#include <opencv/highgui.h>
+using namespace cv;
 
 namespace Ui {
 class MicKamMainWindow;
@@ -22,6 +26,8 @@ public:
 
     QGraphicsScene *scene;
     SetSettingsForCamera *CameraSettings;
+    VideoCapture *videocap;
+
     // camera function
     bool SetCamera();
 
@@ -41,6 +47,8 @@ private slots:
     void on_actionOpen_image_file_triggered();
 
     void on_actionSettings_triggered();
+
+    void on_actionActivate_triggered();
 
 private:
     Ui::MicKamMainWindow *ui;

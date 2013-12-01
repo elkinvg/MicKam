@@ -21,8 +21,8 @@ win32 {
 }
 unix{
 LIBS += -L/usr/lib/x86_64-linux-gnu/
-LIBS += -lgphoto2
-LIBS += -L./SO/ -lqdsandfc# -ldetectorscan
+#LIBS += -lgphoto2
+#LIBS += -L./SO/ -lqdsandfc# -ldetectorscan
 #LIBS += -L/usr/lib
 #LIBS += -ldetectorscan
 LIBS += -L/usr/local/lib -lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_ml -lopencv_video -lopencv_features2d -lopencv_calib3d -lopencv_objdetect -lopencv_contrib -lopencv_legacy -lopencv_flann
@@ -30,10 +30,12 @@ LIBS += -L/usr/local/lib -lopencv_core -lopencv_imgproc -lopencv_highgui -lopenc
 
 SOURCES += main.cpp\
         mickammainwindow.cpp \
-    setsettingsforcamera.cpp
+    setsettingsforcamera.cpp \
+   qdsandfc.cpp
 
 HEADERS  += mickammainwindow.h \
-    setsettingsforcamera.h
+    setsettingsforcamera.h \
+    qdsandfc.h
 
 FORMS    += ./ui/mickammainwindow.ui \
     ui/setsettingsforcamera.ui

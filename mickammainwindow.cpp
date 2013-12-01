@@ -152,7 +152,13 @@ void MicKamMainWindow::viewOpenQimage(const QImage &image)
 
 bool MicKamMainWindow::SetCamera()
 {
-    return FALSE;
+//    //videocap->
+//    videocap = new VideoCapture();
+//    Mat frame;
+//    videocap->read(frame);
+//    imwrite("as.jpg",frame);
+//    if (videocap->isOpened()) return true;
+//    else    return FALSE;
 }
 
 void MicKamMainWindow::ViewAppendText(QString message)
@@ -166,4 +172,12 @@ void MicKamMainWindow::on_actionSettings_triggered()
 {
     CameraSettings = new SetSettingsForCamera;
     CameraSettings->show();
+}
+
+void MicKamMainWindow::on_actionActivate_triggered()
+{
+    if (!resset)
+    {
+        resset = SetCamera();
+    }
 }
