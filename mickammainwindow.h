@@ -28,8 +28,11 @@ public:
     SetSettingsForCamera *CameraSettings;
     VideoCapture *videocap;
 
+    QTimer *timer; // timer for update QGraphicsScene
+
     // camera function
     bool SetCamera();
+    void SetTimer();
 
     // qt window function
     void fileOpenImage(QString namefile);
@@ -49,6 +52,8 @@ private slots:
     void on_actionSettings_triggered();
 
     void on_actionActivate_triggered();
+
+    void previewimage();
 
 private:
     Ui::MicKamMainWindow *ui;

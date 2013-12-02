@@ -3,6 +3,56 @@
 #include <QFileDialog>
 #include <QTime>
 #include <QScrollBar>
+#include <QTimer>
+
+//#include <QThread>
+
+//class CamThread : public QThread
+//{
+//    //Q_OBJECT
+//    cv::Mat VCap;
+//    virtual void run();
+//    VideoCapture *videocap;
+//public:
+//    CamThread();
+//    virtual ~CamThread();
+
+//    cv::Mat GetVCap();
+//    bool isCamActive();
+//};
+
+//void CamThread::run()
+//{
+
+//    if (videocap->isOpened())
+//    {
+//        for(;;)
+//        {
+//            videocap->read(VCap);
+//            msleep(100);
+//        }
+//    }
+//    else delete videocap;
+//}
+
+//CamThread::CamThread()
+//{
+//    videocap = new VideoCapture(0);
+//}
+
+//Mat CamThread::GetVCap()
+//{
+//    return VCap;
+//}
+
+//bool CamThread::isCamActive()
+//{
+//    return videocap->isOpened();
+//}
+
+//CamThread::~CamThread()
+//{
+//}
 
 MicKamMainWindow::MicKamMainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -16,7 +66,7 @@ MicKamMainWindow::MicKamMainWindow(QWidget *parent) :
     if (!resset)
     {
         QPixmap prew;
-        if(prew.load("nichtpic.cap"))
+        if(prew.load(":/new/prefix1/res/nichtpic.cap"))
         {
             viewHelloImage(prew);
         }
@@ -152,13 +202,36 @@ void MicKamMainWindow::viewOpenQimage(const QImage &image)
 
 bool MicKamMainWindow::SetCamera()
 {
-//    //videocap->
-//    videocap = new VideoCapture();
+//    CamThread *camthread = new CamThread;
+//    camthread->start();
 //    Mat frame;
-//    videocap->read(frame);
+//    sleep(10);
+//    frame = camthread->GetVCap();
 //    imwrite("as.jpg",frame);
-//    if (videocap->isOpened()) return true;
-//    else    return FALSE;
+    //sleep()
+    //videocap->
+    //videocap = new VideoCapture(0);
+//    if (videocap->isOpened())
+//    {
+//        Mat frame;
+//        for (int i=0;i<10;i++){
+//        videocap->read(frame);ui->MicKamMessage->appendPlainText("o");}
+
+//        imwrite("as.jpg",frame);
+//        ui->MicKamMessage->appendPlainText("prodano");
+//    }
+//    else
+//    {
+//        ui->MicKamMessage->appendPlainText("ne prodano");
+//        return FALSE;
+    //    }
+
+}
+
+void MicKamMainWindow::SetTimer()
+{
+    timer = new QTimer(this);
+    connect(timer,SIGNAL(timeout()),this,SLOT(previewimage()));
 }
 
 void MicKamMainWindow::ViewAppendText(QString message)
@@ -181,3 +254,13 @@ void MicKamMainWindow::on_actionActivate_triggered()
         resset = SetCamera();
     }
 }
+
+void MicKamMainWindow::previewimage()
+{
+    QImage preview;
+    if (videocap->isOpened())
+    {
+
+    }
+}
+
