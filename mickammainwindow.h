@@ -5,8 +5,11 @@
 #include <QGraphicsScene>
 #include <setsettingsforcamera.h>
 // OPENCV
-#include <opencv/cv.h>
-#include <opencv/highgui.h>
+//#include <opencv/cv.h>
+//#include <opencv/highgui.h>
+// MYLIB
+#include "qdsandfc.h"
+
 using namespace cv;
 
 namespace Ui {
@@ -22,7 +25,6 @@ public:
     ~MicKamMainWindow();
 
     bool resset;  // if camera is active return true
-    double scalenow; // value for scale of graphicsviews
 
     QGraphicsScene *scene;
     SetSettingsForCamera *CameraSettings;
@@ -60,6 +62,10 @@ private:
     void ViewAppendText(QString message);
     void viewHelloImage(const QPixmap &pixmap);
     void viewHelloText(QString);
+
+    bool isReopen;
+    int timervalue; // value for timer
+    double scalenow; // value for scale of graphicsview
 };
 
 #endif // MICKAMMAINWINDOW_H

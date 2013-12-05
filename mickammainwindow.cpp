@@ -5,66 +5,25 @@
 #include <QScrollBar>
 #include <QTimer>
 
-//#include <QThread>
-
-//class CamThread : public QThread
-//{
-//    //Q_OBJECT
-//    cv::Mat VCap;
-//    virtual void run();
-//    VideoCapture *videocap;
-//public:
-//    CamThread();
-//    virtual ~CamThread();
-
-//    cv::Mat GetVCap();
-//    bool isCamActive();
-//};
-
-//void CamThread::run()
-//{
-
-//    if (videocap->isOpened())
-//    {
-//        for(;;)
-//        {
-//            videocap->read(VCap);
-//            msleep(100);
-//        }
-//    }
-//    else delete videocap;
-//}
-
-//CamThread::CamThread()
-//{
-//    videocap = new VideoCapture(0);
-//}
-
-//Mat CamThread::GetVCap()
-//{
-//    return VCap;
-//}
-
-//bool CamThread::isCamActive()
-//{
-//    return videocap->isOpened();
-//}
-
-//CamThread::~CamThread()
-//{
-//}
-
 MicKamMainWindow::MicKamMainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MicKamMainWindow)
 {
     ui->setupUi(this);
     scene = new QGraphicsScene;
+    timervalue = 40;
+    //timervalue = 1000;
+    scalenow = 1;
+    isReopen = true;
 
     resset = SetCamera();
 
+    ui->MicKamView->installEventFilter(this);
+    ui->MicKamView->verticalScrollBar()->installEventFilter(this);
+
     if (!resset)
     {
+        scene->clear();
         QPixmap prew;
         if(prew.load(":/new/prefix1/res/nichtpic.cap"))
         {
@@ -74,8 +33,12 @@ MicKamMainWindow::MicKamMainWindow(QWidget *parent) :
         {
             viewHelloText("OOPS!");
         }
-        ui->MicKamView->installEventFilter(this);
-        ui->MicKamView->verticalScrollBar()->installEventFilter(this);
+
+    }
+    else
+    {
+        SetTimer();
+        timer->start(timervalue);
     }
 }
 
@@ -98,12 +61,17 @@ bool MicKamMainWindow::eventFilter(QObject *obj, QEvent *event)
         {
             if(((QWheelEvent*)event)->delta()>0 && ui->MicKamView->matrix().m11()<100)
             {
+
                 ui->MicKamView->scale(1.25,1.25);
+                scalenow = scalenow*1.25;
+                //scalenow = ui->MicKamView->matrix().m11();
             }
             else if (ui->MicKamView->matrix().m11()>0.05)
             {
                 ui->MicKamView->scale(0.8,0.8);
-                scalenow = ui->MicKamView->matrix().m11();
+                scalenow = scalenow*0.8;
+                //scalenow = ui->MicKamView->matrix().m11();
+
             }
             return true;
         }
@@ -113,13 +81,15 @@ bool MicKamMainWindow::eventFilter(QObject *obj, QEvent *event)
         if (((QWheelEvent*)event)->delta()>0 && ui->MicKamView->matrix().m11()<100)
         {
             ui->MicKamView->scale(1.25,1.25);
-            scalenow = ui->MicKamView->matrix().m11();
+            scalenow = scalenow*1.25;
+            //scalenow = ui->MicKamView->matrix().m11();
         }
 
         else if (ui->MicKamView->matrix().m11()>0.05)
         {
             ui->MicKamView->scale(0.8,0.8);
-            scalenow = ui->MicKamView->matrix().m11();
+            scalenow = scalenow*1.25;
+            //scalenow = ui->MicKamView->matrix().m11();
         }
         return true;
     }
@@ -133,6 +103,9 @@ void MicKamMainWindow::on_actionSave_Picture_as_triggered()
 void MicKamMainWindow::on_actionOpen_image_file_triggered()
 {
     QString ImageFileName = QFileDialog::getOpenFileName(this, tr("File..."),QString(), tr("Image-Files (*.jpg *.jpeg *.png);;All Files (*)"));
+#ifdef TEMP
+    ViewAppendText("Open file");
+#endif
     if (ImageFileName.isEmpty())
     {
         return;
@@ -164,6 +137,7 @@ void MicKamMainWindow::fileOpenImage(QString namefile)
     if(pixmap.load(namefile))
     {
         ViewAppendText("Open image file: "+namefile);
+        //if (timer->isActive()) timer->stop();
     }
     else
     {
@@ -179,11 +153,14 @@ void MicKamMainWindow::viewOpenPixmap(const QPixmap &pixmap)
     scene->clear();
     scene->addPixmap(pixmap);
     scene->setSceneRect(0,0,pixmap.width(),pixmap.height());
-    if (ui->MicKamView->matrix().m11()!=1. || ui->MicKamView->matrix().m22()!=1.)
+    if (isReopen)
     {
-        ui->MicKamView->scale((1./ui->MicKamView->matrix().m11()),(1./ui->MicKamView->matrix().m11()));
+        if (ui->MicKamView->matrix().m11()!=1. || ui->MicKamView->matrix().m22()!=1.)
+        {
+            ui->MicKamView->scale((1./ui->MicKamView->matrix().m11()),(1./ui->MicKamView->matrix().m11()));
+        }
+        ui->MicKamView->scale((double)ui->MicKamView->width()/(double)pixmap.width(),(double)ui->MicKamView->width()/(double)pixmap.width());
     }
-    ui->MicKamView->scale((double)ui->MicKamView->width()/(double)pixmap.width(),(double)ui->MicKamView->width()/(double)pixmap.width());
     ui->MicKamView->setScene(scene);
 }
 
@@ -192,23 +169,22 @@ void MicKamMainWindow::viewOpenQimage(const QImage &image)
     scene->clear();
     scene->addPixmap(QPixmap::fromImage(image));
     scene->setSceneRect(0,0,image.width(),image.height());
-    ui->MicKamView->setScene(scene);
-    if (ui->MicKamView->matrix().m11()!=1. || ui->MicKamView->matrix().m22()!=1.)
+    if (isReopen)
     {
-        ui->MicKamView->scale((1./ui->MicKamView->matrix().m11()),(1./ui->MicKamView->matrix().m11()));
+        scalenow = ui->MicKamView->matrix().m11();
+        if (ui->MicKamView->matrix().m11()!=1. || ui->MicKamView->matrix().m22()!=1.)
+        {
+            ui->MicKamView->scale((1./ui->MicKamView->matrix().m11()),(1./ui->MicKamView->matrix().m11()));
+        }
+        ui->MicKamView->scale((double)ui->MicKamView->width()/(double)image.width(),(double)ui->MicKamView->width()/(double)image.width());
+        isReopen=false;
     }
-    ui->MicKamView->scale((double)ui->MicKamView->width()/(double)image.width(),(double)ui->MicKamView->width()/(double)image.width());
+
+    ui->MicKamView->setScene(scene);
 }
 
 bool MicKamMainWindow::SetCamera()
 {
-//    CamThread *camthread = new CamThread;
-//    camthread->start();
-//    Mat frame;
-//    sleep(10);
-//    frame = camthread->GetVCap();
-//    imwrite("as.jpg",frame);
-    //sleep()
     //videocap->
     //videocap = new VideoCapture(0);
 //    if (videocap->isOpened())
@@ -225,7 +201,9 @@ bool MicKamMainWindow::SetCamera()
 //        ui->MicKamMessage->appendPlainText("ne prodano");
 //        return FALSE;
     //    }
-
+    videocap = new VideoCapture(-1);
+    if (videocap->isOpened())  {ui->MicKamMessage->appendPlainText("prodano");return true;}
+    else return false;
 }
 
 void MicKamMainWindow::SetTimer()
@@ -258,9 +236,18 @@ void MicKamMainWindow::on_actionActivate_triggered()
 void MicKamMainWindow::previewimage()
 {
     QImage preview;
+    QDSandFC dsfc;
+    Mat VideoFrame;
     if (videocap->isOpened())
     {
 
+        videocap->read(VideoFrame);
+        preview = dsfc.QDSMat2QImageConvert(VideoFrame);
+        viewOpenQimage(preview);
     }
+    else
+    {
+    }
+
 }
 
