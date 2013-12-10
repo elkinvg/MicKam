@@ -34,7 +34,7 @@ public:
 
     // camera function
     bool SetCamera();
-    void SetTimer();
+    void SetTimerForNotebookCamera();
 
     // qt window function
     void fileOpenImage(QString namefile);
@@ -56,6 +56,8 @@ private slots:
     void on_actionActivate_triggered();
 
     void previewimage();
+
+    void on_actionPreview_Mode_triggered();
 
 private:
     Ui::MicKamMainWindow *ui;

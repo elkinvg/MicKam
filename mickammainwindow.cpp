@@ -11,8 +11,8 @@ MicKamMainWindow::MicKamMainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     scene = new QGraphicsScene;
-    timervalue = 40;
-    //timervalue = 1000;
+    //timervalue = 40;
+    timervalue = 240;
     scalenow = 1;
     isReopen = true;
 
@@ -37,7 +37,7 @@ MicKamMainWindow::MicKamMainWindow(QWidget *parent) :
     }
     else
     {
-        SetTimer();
+        SetTimerForNotebookCamera();
         timer->start(timervalue);
     }
 }
@@ -102,15 +102,20 @@ void MicKamMainWindow::on_actionSave_Picture_as_triggered()
 
 void MicKamMainWindow::on_actionOpen_image_file_triggered()
 {
-    QString ImageFileName = QFileDialog::getOpenFileName(this, tr("File..."),QString(), tr("Image-Files (*.jpg *.jpeg *.png);;All Files (*)"));
-#ifdef TEMP
-    ViewAppendText("Open file");
-#endif
+    QFileDialog *fod = new QFileDialog;
+    QString ImageFileName = fod->getOpenFileName(this, tr("File..."),/*QString()*/"", tr("Image-Files (*.jpg *.jpeg *.png);;All Files (*)"));
+
     if (ImageFileName.isEmpty())
     {
         return;
     }
-    ui->actionPreview_Mode->setChecked(false);
+
+    if (ui->actionPreview_Mode->isChecked())
+    {
+        ui->actionPreview_Mode->setChecked(false);
+        if(timer->isActive()) timer->stop();
+    }
+
     fileOpenImage(ImageFileName);
 }
 
@@ -206,7 +211,7 @@ bool MicKamMainWindow::SetCamera()
     else return false;
 }
 
-void MicKamMainWindow::SetTimer()
+void MicKamMainWindow::SetTimerForNotebookCamera()
 {
     timer = new QTimer(this);
     connect(timer,SIGNAL(timeout()),this,SLOT(previewimage()));
@@ -249,5 +254,27 @@ void MicKamMainWindow::previewimage()
     {
     }
 
+}
+
+
+void MicKamMainWindow::on_actionPreview_Mode_triggered()
+{
+    ViewAppendText("TRIGGER");
+    //ui->actionPreview_Mode->
+    if(ui->actionPreview_Mode->isChecked())
+    {
+        if (!timer->isActive()) timer->start(timervalue);
+        //if (loadimage) {delete screenphoto; loadimage = false;}
+#ifdef TEMP
+    ViewAppendText("neOpen file");
+#endif
+    }
+    else
+    {
+#ifdef TEMP
+    ViewAppendText("Open file");
+#endif
+        if(timer->isActive()) timer->stop();
+    }
 }
 

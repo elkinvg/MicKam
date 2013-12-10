@@ -170,6 +170,7 @@
      <string>Camera</string>
     </property>
     <addaction name="actionActivate"/>
+    <addaction name="separator"/>
     <addaction name="actionPreview_Mode"/>
     <addaction name="actionSettings"/>
    </widget>
