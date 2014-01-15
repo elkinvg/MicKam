@@ -3,7 +3,8 @@
 //QT
 #include <QMainWindow>
 #include <QGraphicsScene>
-#include <setsettingsforcamera.h>
+#include "setsettingsforcamera.h"
+
 // OPENCV
 //#include <opencv/cv.h>
 //#include <opencv/highgui.h>

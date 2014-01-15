@@ -2,8 +2,10 @@
 #define QDSANDFC_H
 
 //#include "detectorscan.h"
+
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
+
 #include <QImage>
 
 using namespace std;
